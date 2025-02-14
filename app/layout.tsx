@@ -9,10 +9,7 @@ const outfit = Outfit({
   weight: ["400", "500", "600", "700"],
 });
 
-const ovo = Ovo({
-  subsets: ["latin"],
-  weight: ["400"],
-});
+
 
 export const metadata: Metadata = {
   title: "Doctor-Appointment Webapp",
