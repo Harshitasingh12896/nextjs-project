@@ -1,5 +1,5 @@
 import { Metadata } from "next";
-import { Outfit, Ovo } from "next/font/google";
+import { Outfit } from "next/font/google";
 import { Toaster } from "sonner"; // ✅ Correct Import
 import "./globals.css"; 
 import Header from "./components/Header";
