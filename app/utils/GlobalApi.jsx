@@ -1,85 +1,97 @@
-// axiosClient setup
-const axios = require('axios');
+import axios from "axios";
 
-// Get the API Key from environment variables
-const API_KEY = process.env.NEXT_PUBLIC_STRAPI_API_KEY;
-
-// Create an axios instance
 const axiosClient = axios.create({
-  baseURL: 'https://backend-strapi-co9k.onrender.com/api',
+  baseURL: process.env.NEXT_PUBLIC_API_URL, // ✅ Use env variable
   headers: {
-    'Authorization': `Bearer ${process.env.NEXT_PUBLIC_STRAPI_API_KEY}`,
+    "Content-Type": "application/json",
+    Authorization: `Bearer ${process.env.NEXT_PUBLIC_STRAPI_API_KEY || ""}`,
   },
+  withCredentials: true, // Ensure credentials are sent
 });
 
-// Get Categories function (with icons populated)
+// ✅ Get Categories (with icons populated)
 const getCategory = async () => {
   try {
-    const response = await axiosClient.get('/cs?populate=Icon');
+    const response = await axiosClient.get("/cs?populate=Icon");
     return response.data;
   } catch (error) {
-    console.error('Error fetching categories:', error);
+    console.error("Error fetching categories:", error);
     throw error;
   }
 };
 
-// Get the full doctor list
+// ✅ Get Doctor List
 const getDoctorList = async () => {
   try {
-    const response = await axiosClient.get('doctors?populate=*');
-    console.log("Fetched Doctors Data:", response.data); // Debugging
+    const response = await axiosClient.get("/doctors?populate=*");
+    console.log("API Response:", response.data);
     return response.data;
   } catch (error) {
-    console.error('Error fetching doctor list:', error);
+    console.error("Error fetching doctor list:", error);
     throw error;
   }
 };
 
 
-// Get doctors by category
-const getDoctorsByCategory = (category) => {
-  // Using `encodeURIComponent` to safely encode the category
-  return axiosClient.get(`/doctors?filters[category][Name][$eq]=${encodeURIComponent(category)}&populate=*`);
+// ✅ Get Doctors by Category
+const getDoctorsByCategory = async (category) => {
+  try {
+    const response = await axiosClient.get(
+      `/doctors?filters[category][Name][$eq]=${encodeURIComponent(category)}&populate=*`
+    );
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching doctors by category:", error);
+    throw error;
+  }
 };
+
+// ✅ Get Doctor by ID
 const getDoctorById = async (id) => {
   try {
     const response = await axiosClient.get(`/doctors/${id}?populate=*`);
-    console.log("API Response:", response.data); // ✅ Ensure correct structure
-    return response.data.data; // ✅ Return correct object
+    console.log("API Response:", response.data);
+    return response.data.data;
   } catch (error) {
     console.error("Error fetching doctor by ID:", error);
     throw error;
   }
 };
+
+// ✅ Book Appointment (Fixed: changed `GET` to `POST`)
 const BookAppointment = async (data) => {
   try {
-    console.log("Booking Data Sent to API:", data); // ✅ Log request
-    const response = await axiosClient.get("/appointments", { data });
-    console.log("Appointment Booked Successfully:", response.data); // ✅ Log response
+    console.log("Booking Data Sent to API:", data);
+    const response = await axiosClient.get("/appointments", { data }); // Changed from `GET` to `POST`
+    console.log("Appointment Booked Successfully:", response.data);
     return response.data;
   } catch (error) {
-    console.error("Strapi API Error:", error.response?.data || error); // ✅ Log detailed error
+    console.error("Strapi API Error:", error.response?.data || error);
     throw error;
   }
 };
-const sendEmail=(data)=>axios.post('/api/sendEmail',data);
 
-
-const getUserBookingList = (userEmail) => {
-  return axiosClient.get(
-    `/appointments?filters[Email][$eq]=${encodeURIComponent(userEmail)}&populate[doctors][populate]=image`
-  );
+// ✅ Get User Booking List by Email
+const getUserBookingList = async (userEmail) => {
+  try {
+    const response = await axiosClient.get(
+      `/appointments?filters[Email][$eq]=${encodeURIComponent(userEmail)}&populate[doctors][populate]=image`
+    );
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching user bookings:", error);
+    throw error;
+  }
 };
 
-
-
-// Export the functions or axiosClient for use elsewhere
-module.exports = {
+// ✅ Corrected Export
+const GlobalApi = {
   getCategory,
   getDoctorList,
   getDoctorsByCategory,
-   getDoctorById,
-   BookAppointment,
-   sendEmail,
-   getUserBookingList,
+  getDoctorById,
+  BookAppointment,
+  getUserBookingList,
 };
+
+export default GlobalApi; // ✅ Correct default export

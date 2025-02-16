@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-// Doctor component that receives `doctorList` as a prop
+// Doctor component that receives doctorList as a prop
 export default function Doctor({ heading = "Popular Doctors", doctorList = [] }) {
   return (
     <div className="mt-20 px-8">
