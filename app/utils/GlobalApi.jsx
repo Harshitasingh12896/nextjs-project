@@ -1,5 +1,8 @@
 import axios from "axios";
 
+// Log the API key (optional for debugging purposes)
+console.log("API Key:", process.env.NEXT_PUBLIC_STRAPI_API_KEY);
+
 const axiosClient = axios.create({
   baseURL: process.env.NEXT_PUBLIC_API_URL, // ✅ Use env variable
   headers: {
@@ -8,7 +11,6 @@ const axiosClient = axios.create({
   },
   withCredentials: true, // Ensure credentials are sent
 });
-
 // ✅ Get Categories (with icons populated)
 const getCategory = async () => {
   try {
